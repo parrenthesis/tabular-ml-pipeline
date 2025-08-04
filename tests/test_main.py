@@ -6,9 +6,7 @@ import sys
 
 # Ensure synthetic DB exists before running tests
 if not os.path.exists("data/data.db"):
-    subprocess.run([
-        sys.executable, "scripts/generate_synthetic_db.py"
-    ], check=True)
+    subprocess.run([sys.executable, "scripts/generate_synthetic_db.py"], check=True)
 
 from src.main import run_pipeline
 
