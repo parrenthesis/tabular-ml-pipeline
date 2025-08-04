@@ -1,8 +1,10 @@
+from typing import Any, Tuple
+
 import numpy as np
 import pandas as pd
 from sklearn.base import BaseEstimator
-from typing import Any, Tuple
 from sklearn.metrics import precision_recall_curve
+
 
 def predict(model: BaseEstimator, df: pd.DataFrame) -> Any:
     """
@@ -15,10 +17,9 @@ def predict(model: BaseEstimator, df: pd.DataFrame) -> Any:
     """
     return model.predict(df)
 
+
 def predict_with_threshold(
-    model: BaseEstimator,
-    X: pd.DataFrame,
-    threshold: float = 0.5
+    model: BaseEstimator, X: pd.DataFrame, threshold: float = 0.5
 ) -> np.ndarray:
     """
     Predict class labels using a custom threshold on predicted probabilities.
@@ -32,10 +33,9 @@ def predict_with_threshold(
     y_proba = model.predict_proba(X)[:, 1]
     return (y_proba >= threshold).astype(int)
 
+
 def find_threshold_for_precision(
-    y_true: np.ndarray,
-    y_proba: np.ndarray,
-    target_precision: float
+    y_true: np.ndarray, y_proba: np.ndarray, target_precision: float
 ) -> Tuple[float, float, float]:
     """
     Find the lowest threshold that achieves at least the target precision.

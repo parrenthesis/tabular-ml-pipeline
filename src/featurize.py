@@ -1,13 +1,14 @@
 import sqlite3
+from typing import List, Tuple
 import pandas as pd
-import numpy as np
-from typing import Tuple, List
+
 
 def extract_features_and_clean(
-    db_path: str
+    db_path: str,
 ) -> Tuple[pd.DataFrame, pd.Series, List[str], List[str]]:
     """
-    Extract features from SQLite DB, perform cleaning and return X, y, and feature lists.
+    Extract features from SQLite DB, perform cleaning and return X, y, and
+    feature lists.
     Args:
         db_path: Path to SQLite database file.
     Returns:
@@ -46,23 +47,31 @@ def extract_features_and_clean(
     conn.close()
 
     # Standardize sex column to uppercase for consistency
-    if 'sex' in df.columns:
-        df['sex'] = df['sex'].str.upper()
+    if "sex" in df.columns:
+        df["sex"] = df["sex"].str.upper()
 
     # Drop rows with missing toothType
     df = df.dropna(subset=["toothType"])
 
     # Impute area by group mean (toothType, sex), fallback to global mean
-    group_means = df.groupby(["toothType", "sex"])['tooth_area'].mean().to_dict()
-    global_mean = df['tooth_area'].mean()
-    def impute_area(row):
-        if pd.isna(row['tooth_area']):
-            key = (row['toothType'], row['sex'])
-            return group_means.get(key, global_mean)
-        return row['tooth_area']
-    df['tooth_area'] = df.apply(impute_area, axis=1)
+    group_means = df.groupby(["toothType", "sex"])["tooth_area"].mean().to_dict()
+    global_mean = df["tooth_area"].mean()
 
-    numeric = ["age", "tooth_area", "cavity_count", "cavity_area_sum", "cavity_area_mean"]
+    def impute_area(row):
+        if pd.isna(row["tooth_area"]):
+            key = (row["toothType"], row["sex"])
+            return group_means.get(key, global_mean)
+        return row["tooth_area"]
+
+    df["tooth_area"] = df.apply(impute_area, axis=1)
+
+    numeric = [
+        "age",
+        "tooth_area",
+        "cavity_count",
+        "cavity_area_sum",
+        "cavity_area_mean",
+    ]
     categorical = ["sex", "toothType"]
     X = df[numeric + categorical]
     y = df["needs_treatment"]

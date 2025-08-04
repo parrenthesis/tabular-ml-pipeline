@@ -1,9 +1,10 @@
 import logging
 import os
 from datetime import datetime
-import matplotlib.pyplot as plt
+from typing import List
+
 import numpy as np
-from typing import List, Any
+
 
 def setup_logging(log_dir: str = "logs") -> logging.Logger:
     """
@@ -14,16 +15,16 @@ def setup_logging(log_dir: str = "logs") -> logging.Logger:
         Configured logger
     """
     os.makedirs(log_dir, exist_ok=True)
-    log_filename = os.path.join(log_dir, f"run_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log")
+    log_filename = os.path.join(
+        log_dir, f"run_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
+    )
     logging.basicConfig(
         level=logging.INFO,
-        format='%(asctime)s %(levelname)s %(message)s',
-        handlers=[
-            logging.FileHandler(log_filename),
-            logging.StreamHandler()
-        ]
+        format="%(asctime)s %(levelname)s %(message)s",
+        handlers=[logging.FileHandler(log_filename), logging.StreamHandler()],
     )
     return logging.getLogger(__name__)
+
 
 def plot_feature_importances(
     importances: np.ndarray,
@@ -31,7 +32,7 @@ def plot_feature_importances(
     model_name: str,
     out_dir: str = "plots",
     show: bool = False,
-    save: bool = True
+    save: bool = True,
 ) -> str:
     """
     Plot and optionally save/show feature importances.
@@ -51,11 +52,16 @@ def plot_feature_importances(
 
     sorted_idx = np.argsort(importances)[::-1]
     plt.figure(figsize=(8, 3))
-    plt.bar([feature_names[i] for i in sorted_idx[:10]], importances[sorted_idx[:10]])
+    plt.bar(
+        [feature_names[i] for i in sorted_idx[:10]],
+        importances[sorted_idx[:10]],
+    )
     plt.title(f"Top 10 Feature Importances ({model_name})")
     plt.xticks(rotation=45)
     plt.tight_layout()
-    out_path = os.path.join(out_dir, f"feature_importances_{model_name.replace(' ', '_')}.png")
+    out_path = os.path.join(
+        out_dir, f"feature_importances_{model_name.replace(' ', '_')}.png"
+    )
     if save:
         os.makedirs(out_dir, exist_ok=True)
         plt.savefig(out_path)
@@ -73,7 +79,7 @@ def plot_precision_recall_curve(
     model_name: str,
     out_dir: str = "plots",
     show: bool = False,
-    save: bool = True
+    save: bool = True,
 ) -> str:
     """
     Plot and optionally save/show precision-recall vs threshold curve.
@@ -90,12 +96,13 @@ def plot_precision_recall_curve(
     """
     import os
     import matplotlib.pyplot as plt
+
     plt.figure(figsize=(6, 4))
-    plt.plot(thresholds, precisions[:-1], label='Precision')
-    plt.plot(thresholds, recalls[:-1], label='Recall')
-    plt.xlabel('Threshold')
-    plt.ylabel('Score')
-    plt.title(f'Precision/Recall vs Threshold ({model_name})')
+    plt.plot(thresholds, precisions[:-1], label="Precision")
+    plt.plot(thresholds, recalls[:-1], label="Recall")
+    plt.xlabel("Threshold")
+    plt.ylabel("Score")
+    plt.title(f"Precision/Recall vs Threshold ({model_name})")
     plt.legend()
     plt.tight_layout()
     out_path = os.path.join(out_dir, f"pr_curve_{model_name.replace(' ', '_')}.png")
@@ -106,4 +113,4 @@ def plot_precision_recall_curve(
         plt.show()
     else:
         plt.close()
-    return out_path if save else None 
+    return out_path if save else None

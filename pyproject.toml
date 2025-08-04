@@ -28,7 +28,12 @@ notebook = "^7.4.4"
 jupyter = "^1.1.1"
 jupyterlab = "^4.4.5"
 pytest = "^8.4.1"
+black = "^25.1.0"
+isort = "^6.0.1"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.flake8]
+max-line-length = 88
