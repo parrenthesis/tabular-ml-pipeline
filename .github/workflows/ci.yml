@@ -20,5 +20,7 @@ jobs:
         run: poetry run flake8 src/ tests/
       - name: Format check
         run: poetry run black --check src/ tests/
+      - name: Generate synthetic database
+        run: poetry run python scripts/generate_synthetic_db.py
       - name: Run tests with coverage
         run: poetry run pytest --cov=src tests/
