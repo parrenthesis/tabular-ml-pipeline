@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "Modular ML pipeline for tabular (synthetic) healthcare data, with recall optimization."
 authors = ["parrenthesis"]
 readme = "README.md"
+package-mode = false
 
 [tool.poetry.dependencies]
 python = ">=3.10,<4.0"
